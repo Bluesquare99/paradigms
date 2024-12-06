@@ -1,0 +1,11 @@
+(defpackage :paradigms/16
+  (:use :cl))
+
+(in-package :paradigms/16)
+
+;; Suppose you read the headline "Elvis Alive in Kalamazoo" in a
+;; tabloid newspaper to which you attribute a certainty factor of
+;; .01. If you combine certainties using EMYCIN's combination rule,
+;; how many more copies of the newspaper would you need to see before
+;; you were .95 certain Elvis is alive?
+

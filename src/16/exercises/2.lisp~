@@ -1,0 +1,8 @@
+(in-package :paradigms/16)
+
+;; Suppose the rule writer wanted to be able to use symbolic certainty
+;; factors instead of numbers. What would you need to change to
+;; support rules like this:
+
+#+nil(defrule 100 if ... then true ...)
+#+nil(defrule 101 if ... then probably ...)

@@ -1,0 +1,15 @@
+(in-package :paradigms/16)
+
+;; Exercise 16.4
+;;
+;; Currently, the rule writer can introduce a new parameter without
+;; defining it first. That is handy for rapid testing, but it means
+;; that the user of the system won't be able to see a nice English
+;; prompt, nor ask for the type of the parameter. In addition, if the
+;; rule writer simply misspells a parameter, it will be treated as a
+;; new one. Make a simple change to fix these problems.
+;;
+
+;; Parameter definitions allow for someone to see an English sentence
+;; for a prompt and ask for the type of a parameter.
+

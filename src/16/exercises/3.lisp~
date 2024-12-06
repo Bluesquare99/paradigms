@@ -1,0 +1,20 @@
+(in-package :paradigms/16)
+
+;; Exercise 16.3
+;;
+;; Change prompt-and-read-vals so that it gives a better prompt for
+;; parameters of type yes/no.
+;;
+
+(defun prompt-and-read-vals (parm inst)
+  "Print the prompt for this parameter (or make one up) and
+  read the reply."
+  (fresh-line)
+  (let ((prompt (concatenate (parm-prompt (get-parm parm))
+                             (if (eq 'yes/no (parm-type parm))
+                                 "Yes or no?"
+                                 nil))))
+    (format t prompt (inst-name inst) parm))
+  (princ " ")
+  (finish-output)
+  (funcall (parm-reader (get-parm parm))))

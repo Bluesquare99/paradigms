@@ -1,0 +1,9 @@
+** Miscellany
+
+- *Instances* are referred to as "objects"
+  
+- *Attributes* are called "parameters" of those objects.
+  
+- *Contexts* are the situations within which the program reasons; they can also be thought of as data types. That is, the list of contexts supplied to the program will determine what types of oxjects can be reasoned about. We can only refer to the most recent instance of each type within a context.
+  + There are three types of contexts with our version MYCIN: (1) patients, (2) cultures, and (3) organisms.
+

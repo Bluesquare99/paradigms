@@ -1,0 +1,10 @@
+(defpackage :paradigms/2
+  (:use :cl))
+
+(in-package :paradigms/2)
+
+;; One way of describing combine-all is that it calculates the
+;; cross-product of the function append on the argument lists. Write
+;; the higher-order function cross-product, and define combine-all in
+;; terms of it.
+

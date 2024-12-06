@@ -1,0 +1,51 @@
+* Canonical Representations of Polynomials
+** Overview
+- The manipulation of algebraic forms is aided by *canonical representations*.
+- One property of canonical representations is that all expressions that are equal have identical canonical forms.
+- In this chapter we create a canonical representation for polynomials.
+
+- A *polynomial* is a function that can be computed using only addition and multiplication.
+- The main components we are concerned with are the main variable, coefficients, and degree.
+- We will represent ours as a vector with the main variable as the first element and the coefficients beginning with x^0
+
+** Showcase
+  1. POLY
+  #+begin_src lisp
+    (poly 'x 2 4 3 4)
+  #+end_src
+
+  2. POLY+POLY
+     This brings up the question of how to add two polynomials with different main variables. For example, `(+ (x 0 1) (y 0 1)`? We order them alphabetically and place the lesser one in the first coefficient place.
+  #+begin_src lisp
+    ;; Two different main vars, 1
+    (poly+poly (poly 'x 0 1) (poly 'y 0 1))
+
+    ;; Two different main vars, 2
+    (poly+poly (poly 'x 1 1) (poly 'y 0 1))
+
+    ;; Same main var
+    (poly+poly (poly 'x 0 1) (poly 'x 0 1))
+  #+end_src
+
+  3. POLY*POLY, K*POLY, POLY*SAME
+     POLY*POLY determines whether to apply K*POLY or POLY*SAME to args.
+     #+begin_src lisp
+       (poly*same (poly 'x 2 3 4) (poly 'x 5 6 7))
+
+       ;; Note: this code is a bit dissatisfying: it creates a new polynomial of the same degree so could just write back to the input polynomial.
+       (k*poly 2 (poly 'x 3))
+
+       (poly*poly (poly 'x 1 3) (poly 'x 1 2))
+       (poly*poly (poly 'x 0 1) (poly 'y 0 2))
+     #+end_src
+
+  4. CANON
+     #+begin_src lisp
+       (canon-simplifier)
+       (3 + x + 4 - x)
+       ;; Talk through how PREFIX->CANON works
+       ;; We go from infix to prefix to canon to prefix to infix
+     #+end_src
+** My exercises
+
+ 
