@@ -47,7 +47,14 @@ a word was found."
 
     graph))
 
-(defun probe-for-continuation )
+(defun probe-for-continuation (next-char graph)
+  "Determine if a word was spelled with a skipped letter."
+  (loop :for outer-val :being :the :hash-values :of graph
+        :if (hash-table-p outer-val) :do
+          (loop :for k :being :the :hash-keys :of outer-val
+                :for inner-val :being :the :hash-values :of outer-val
+                :if (char= next-char k) :do
+                  (return-from probe-for-continuation inner-val))))
 
 (defun walk-graph (answer graph)
   "Walk the graph of acceptable answers, determining if ANSWER is
@@ -76,8 +83,15 @@ valid. We accept the following submissions as valid:
            (walk-graph answer found))
 
           ((null found)
-           (probe-for-continuation ...)
-           found))))
+           (let ((continue (probe-for-continuation next-char graph)))
+             (cond ((null continue)
+                    nil)
+
+                   ((hash-table-p continue)
+                    (walk-graph answer continue))
+
+                   ((equal continue t)
+                    t)))))))
 
 (defun spell-check (answer options)
   (walk-graph
