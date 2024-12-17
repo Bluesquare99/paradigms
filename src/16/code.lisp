@@ -118,12 +118,15 @@
 (defun prompt-and-read-vals (parm inst)
   "Print the prompt for this parameter (or make one up) and
   read the reply."
-  (fresh-line)
-  (indent-appropriately)
-  (format t (parm-prompt (get-parm parm)) (inst-name inst) parm)
-  (princ " ")
-  (finish-output)
-  (funcall (parm-reader (get-parm parm))))
+  (let ((phrase
+          (format nil
+                  (parm-prompt (get-parm parm))
+                  (inst-name inst)
+                  parm)))
+    (print-with-indent phrase)
+    (princ " ")
+    (finish-output)
+    (funcall (parm-reader (get-parm parm)))))
 
 (defun inst-name (inst)
   "The name of this instance."
@@ -191,9 +194,8 @@
   (let ((instance (format nil "~a-~d"
                           (context-name context)
                           (incf (context-number context)))))
-    (fresh-line)
-    (indent-appropriately)
-    (format t "------ ~a ------~&" instance)
+    (let ((phrase (format nil "------ ~a ------" instance)))
+      (print-with-indent phrase))
     (put-db (context-name context) instance)
     (put-db 'current-instance instance)))
 
@@ -299,16 +301,15 @@
 (defun indent (var &optional (amt 2))
   (declare (type integer var amt))
   (incf var amt))
-(defun indent-appropriately ()
+(defun print-with-indent (phrase)
   (dotimes (_ *indent*)
-    (format t " ")))
+    (format t " "))
+  (format t phrase))
 
 (defun get-context-data (contexts)
   "For each context, create an instance and try to find out
   required data.  Then go on to other contexts, depth first,
   and finally ask if there are other instances of this context."
-  (print *indent*)
-  (break)
   (unless (null contexts)
     (let* ((context (first contexts))
            (inst (new-instance context)))
@@ -364,23 +365,19 @@
 (defun report-findings (context inst)
   "Print findings on each goal for this instance."
   (when (context-goals context)
-    (fresh-line)
-    (indent-appropriately)
-    (format t "Findings for ~a:" (inst-name inst))
+    (print-with-indent
+     (format nil "Findings for ~a:" (inst-name inst)))
     (dolist (goal (context-goals context))
       (let ((values (get-vals goal inst)))
         ;; If there are any values for this goal,
         ;; print them sorted by certainty factor.
         (if values
-            (progn
-              (fresh-line)
-              (indent-appropriately)
-              (format t " ~a:~{~{ ~a (~,3f)  ~}~}" goal
-                      (sort (copy-list values) #'> :key #'second)))
-            (progn
-              (fresh-line)
-              (indent-appropriately)
-              (format t " ~a: unknown" goal)))))))
+            (let ((phrase
+                    (if values
+                        (format nil " ~a:~{~{ ~a (~,3f)  ~}~}"
+                                goal (sort (copy-list values) #'> :key #'second))
+                        (format nil " ~a: unknown" goal))))
+              (print-with-indent phrase)))))))
 
 (defun print-rule (rule &optional (stream t) depth)
   (declare (ignore depth))
