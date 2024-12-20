@@ -195,7 +195,9 @@
                           (context-name context)
                           (incf (context-number context)))))
     (let ((phrase (format nil "------ ~a ------" instance)))
-      (print-with-indent phrase))
+      (fresh-line)
+      (print-with-indent phrase)
+      (fresh-line))
     (put-db (context-name context) instance)
     (put-db 'current-instance instance)))
 
@@ -230,18 +232,21 @@
 (defun use-rules (parm)
   "Try every rule associated with this parameter.
   Return true if one of the rules returns true."
-  (some #'true-p (mapcar #'use-rule (get-rules parm))))
+  (let ((lst (mapcar #'use-rule (get-rules parm))))
+    (some #'true-p lst)))
 
 (defun use-rule (rule)
   "Apply a rule to the current situation."
+  (format t "~%Looking into this rule: ~a~%" rule)
   ;; Keep track of the rule for the explanation system:
   (put-db 'current-rule rule)
   ;; If any premise is known false, give up.
-  ;; If every premise can be proved true,  then
+  ;; If every premise can be proved true, then
   ;; draw conclusions (weighted with the certainty factor).
   (unless (some #'reject-premise (rule-premises rule))
     (let ((cf (satisfy-premises (rule-premises rule) true)))
       (when (true-p cf)
+        (format t "~%A rule was found true: ~a~%The cf now is ~a~%" rule cf)
         (dolist (conclusion (rule-conclusions rule))
           (conclude conclusion (* cf (rule-cf rule))))
         cf))))
@@ -253,9 +258,9 @@
   (cond ((null premises) cf-so-far)
         ((not (true-p cf-so-far)) false)
         (t (satisfy-premises
-             (rest premises)
-             (cf-and cf-so-far
-                     (eval-condition (first premises)))))))
+            (rest premises)
+            (cf-and cf-so-far
+                    (eval-condition (first premises)))))))
 
 (defun eval-condition (condition &optional (find-out-p t))
   "See if this condition is true, optionally using FIND-OUT
@@ -509,7 +514,7 @@
     if (gram organism is neg)
     (morphology organism is rod)
     (aerobicity organism is aerobic)
-    then .8
+    then 1.0
     (identity organism is enterobacteriaceae))
 
   (defrule 165
